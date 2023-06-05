@@ -11,6 +11,7 @@ impl<T> Mappable for T where T: DeJson + Eq + Hash {}
 
 /// The main struct that contains the map, the timestamp that the map was last updated,
 /// the maximum amount of time that the map can be cached, and the URL to the map.
+#[derive(Debug)]
 pub struct ActionIDMap<X: Mappable, Y: Mappable> {
     last_updated: i64,
     max_cache_duration: i64,
@@ -45,5 +46,9 @@ impl<X: Mappable, Y: Mappable> ActionIDMap<X, Y> {
     /// Check if the map needs to be refreshed
     pub fn needs_refresh(&self) -> bool {
         self.last_updated + self.max_cache_duration < OffsetDateTime::now_utc().unix_timestamp()
+    }
+    /// Get length of map
+    pub fn len(&self) -> usize {
+        self.map.len()
     }
 }
