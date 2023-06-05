@@ -1,6 +1,6 @@
 [package]
 name = "actionidmap-updater"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 description = "A HashMap that can be updated from a URL. Intended to be used to keep reverse-engineered API's in use even as private referenced ID's get updated."

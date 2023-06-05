@@ -1,19 +1,24 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, hash::Hash};
 
+use nanoserde::DeJson;
 use time::OffsetDateTime;
 
 mod tests;
 
+/// A trait bound that limits what types can be used in an ActionIDMap.
+pub trait Mappable: DeJson + Eq + Hash {}
+impl<T> Mappable for T where T: DeJson + Eq + Hash {}
+
 /// The main struct that contains the map, the timestamp that the map was last updated,
 /// the maximum amount of time that the map can be cached, and the URL to the map.
-pub struct ActionIDMap {
+pub struct ActionIDMap<X: Mappable, Y: Mappable> {
     last_updated: i64,
     max_cache_duration: i64,
     url: String,
-    map: HashMap<String, String>,
+    map: HashMap<X, Y>,
 }
 
-impl ActionIDMap {
+impl<X: Mappable, Y: Mappable> ActionIDMap<X, Y> {
     /// Construct a new ActionIDMap with the given URL and max cache duration
     pub fn new(url: String, max_cache_duration: i64) -> Option<Self> {
         let req = ureq::get(&url).call().ok()?.into_string().ok()?;
@@ -27,8 +32,8 @@ impl ActionIDMap {
         })
     }
     /// Retrieve a value from the map
-    pub fn get(&self, action: &str) -> Option<String> {
-        self.map.get(action).cloned()
+    pub fn get(&self, action: X) -> Option<&Y> {
+        self.map.get(&action)
     }
     /// Force a refresh of the map
     pub fn refresh(&mut self) -> Option<()> {

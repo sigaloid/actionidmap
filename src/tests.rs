@@ -5,12 +5,12 @@ static TEST_URL: &str = "https://gist.githubusercontent.com/sigaloid/e8319cf32d0
 
 #[test]
 fn test_expiry_not_needed() {
-    let actionmap = ActionIDMap::new(TEST_URL.to_string(), 5).unwrap();
+    let actionmap: ActionIDMap<String, String> = ActionIDMap::new(TEST_URL.to_string(), 5).unwrap();
     assert!(!actionmap.needs_refresh());
 }
 #[test]
 fn test_expiry_needed() {
-    let actionmap = ActionIDMap::new(TEST_URL.to_string(), 0).unwrap();
+    let actionmap: ActionIDMap<String, String> = ActionIDMap::new(TEST_URL.to_string(), 0).unwrap();
     std::thread::sleep(Duration::from_secs(1));
     assert!(actionmap.needs_refresh());
 }
